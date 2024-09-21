@@ -1,3 +1,5 @@
+import { app, database } from "./firebase";
+import { collection, addDoc } from "firebase/firestore";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import {
@@ -18,11 +20,13 @@ export default function App() {
   //{ key: 2, name: "Bob" },
   // ];
 
-  function buttonHandler() {
-    //alert("you typed: " + text);
-    setNotes([...notes, { key: notes.length, name: text }]);
+  async function buttonHandler() {
+    try {
+      await addDoc(collection(database, "notes"), { text: text });
+    } catch (err) {
+      console.log("fejl i db", err);
+    }
   }
-
   return (
     <View style={styles.container}>
       <TextInput
